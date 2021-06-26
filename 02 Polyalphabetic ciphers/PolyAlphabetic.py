@@ -2,6 +2,7 @@ from Alphabet import Alphabet
 
 # 65 -> A
 # 97 -> a
+# https://github.com/drewp41/Vigenere-Cipher-Breaker/blob/0eda8f57311e701c46ea77dd56e0394ef98a3f0a/Vigenere_cipher.py#L25
 
 class PolyAlphabetic:
     MAX_KEY_LENGTH_GUESS = 30
