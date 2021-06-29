@@ -1,5 +1,6 @@
 from PerfectAlphabetic import PerfectAlphabetic
 from PerfectAlphabetic2 import PerfectAlphabetic2
+from Test import Test
 
 if __name__ == '__main__':
     # perfect_alphabetic = PerfectAlphabetic("resources/cipher.txt")
@@ -7,3 +8,6 @@ if __name__ == '__main__':
     # perfect_alphabetic.test()
     test1 = PerfectAlphabetic2("resources/cipher.txt")
     test1.crack_cipher()
+
+    # test = Test()
+    # test.test()
