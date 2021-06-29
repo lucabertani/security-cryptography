@@ -2,6 +2,8 @@ from Color import Color
 
 
 class Test:
+
+    # prova per capire se gli algoritmi di hex, ascii, xor funzionano
     def test(self):
         """a = "CIAO MONDOO"
         b = "HELLO WORLD"

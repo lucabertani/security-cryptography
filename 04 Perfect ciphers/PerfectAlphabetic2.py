@@ -34,21 +34,22 @@ class PerfectAlphabetic2:
 
         res_hex34 = self.xor(hex3, hex4)
 
-        # print(" ".join([res_hex12[i:i + 2] for i in range(0, len(res_hex12), 2)]))
+        # decriptato a diversi step
+        # 1. prima si cercano gli spazi. Si riconoscono perché, se c'è uno spazio su un cipher ed un carattere
+        #   su un altro cipher, avrò i primi 2 bit a 01 (tutti i caratteri iniziano con 00, mentre lo spazio con 01)
+        # 2. si cerca di capire a quale cipher corrisponde lo spazio (facendo c1 ^ c2, non si può sapere se lo spazio
+        #    è di c1 o di c2)
+        # 3. si confrontano tutti i cipher per avere quante più informazioni possibili
+        # 4. si fa un XOR con i cipher originali per iniziare a scoprire k (facendo c1 ^ p1 si ottiene k)
+        #    questo passaggio è lungo e complesso perché bisogna trovare diverse verifiche
+        # 5. si avrà una chiave parziale ed un testo parziale e si può iniziare a comprendere il messaggio
+        #    inizialmente si vedeva This mess e si capia che voleva dire message
+        #    poi compare dec***t che stava per decrypt e via così
+        #    basta fare un xor tra l'esadecimale che era presente ed il carattere che si voleva ottenere
+        #    così si otteneva k
 
-        # spazio: 0010 0000
-        # A:      0100 0001
-        # B:      0100 0010
-        # Z:      0101 1010
-        # SE primi 3 bit sono 000 -> è un carattere (oppure sono 2 spazi)
-        # SE primi 3 bit sono 011 -> c'è uno spazio ed un carattere!
-
-        # dict = self.check_spaces(res_hex12)
-        # print("\n")
-        # print(self.test_word_by_position(dict, hex1))
-        # print(self.test_word_by_position(dict, hex2))
-        # dict = self.check_spaces(res_hex13)
-        # dict = self.check_spaces(res_hex14)
+        # un altro approccio (fallito), era provare ad usare parole comuni e shiftare gli esadecimali
+        # fino ad ottenere un testo comprensibile. Ma non riusciva per via delle maiuscole
 
         print("\n")
 
@@ -83,62 +84,41 @@ class PerfectAlphabetic2:
         print("\n")
 
         dict_k = {
-            0: 'g', # V
-            1: 'o', # V
-            2: 'o', # V
-            3: 'd', # V
-            4: ' ', # V
-            5: 't',
-            6: 'h',
-            7: 'i', # V
-            8: 'n',
-            9: 'g', # V
+            0:  'G', # V
+            1:  'o', # V
+            2:  'o', # V
+            3:  'd', # V
+            4:  ' ', # V
+            5:  't',
+            6:  'h',
+            7:  'i', # V
+            8:  'n',
+            9:  'g', # V
             10: 's', # V
             11: ' ',
             12: 'c', # V
+            13: 'o',
+            14: 'm',
+            15: 'e',
             16: ' ', # V
-            17: 't', # ?? oppure t o tilde
-            18: '~', # oppure tilde
+            17: 't', # V
+            18: 'o', # oppure tilde
             19: ' ', # V
             20: 't', # V
-            22: '*', # V
+            21: 'h',
+            22: 'o', # V
             23: 's', # V
+            24: 'e',  # V
             25: ' ', # V
+            26: 'w',
             27: 'h', # V
             28: 'o', # V
+            29: ' ',
             30: 'w',
-            # 31: 'a',
+            31: 'a',
             32: 'i',
             33: 't'
-            #33: 't'
         }
-
-        """dict_k = {
-            0: 'g',
-            1: 'o',
-            2: 'o',
-            3: 'd',
-            4: ' ', # 4: 'o', # r
-            7: 'i', # :
-            9: 'g',
-            10: 's',
-            12: 'c',
-            16: 'v', # t
-            17: 't',
-            18: ';',
-            19: 'h',
-            20: 't',
-            22: 'a', # o
-            23: 's',
-            25: 's', # s
-            26: ' ',
-            27: 'h',
-            28: 'o',
-            30: 'w',
-            31: ' ',
-            32: 'i',
-            33: 't' # u
-        }"""
 
         res_k = ""
         for i in range(0, 34):
@@ -342,4 +322,47 @@ class PerfectAlphabetic2:
         hex_list = [hex[i:i + n] for i in range(0, len(hex), n)]
         return "".join(chr(int(h, 16)) for h in hex_list)
     
+"""
+1d -> r
+14 -> y
+15 -> p
 
+06 -> n
+16 -> w
+49 -> i
+
+01001001
+01101001
+00100000
+
+
+
+
+00010110
+01110111
+01100001
+
+
+
+00000110
+01101110
+01101000
+
+
+
+00010101
+01110000
+01100101
+
+
+
+00010100
+01111001
+01101101
+
+
+
+00011101
+01110010
+01101111
+"""

@@ -1,4 +1,6 @@
 class PerfectAlphabetic:
+    # classe iniziale abbandonata a favore di PerfectAlphabetic2
+
     def __init__(self, cipher_path):
         self.cipher_path = cipher_path
 
