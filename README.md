@@ -7,3 +7,5 @@ Corso di sicurezza sulla crittografia
 
 03 Stream ciphers: completata la sfida AutoKey all'indirizzo https://secgroup.dais.unive.it/teaching/cryptography/stream-ciphers/
 
+04 Perfect ciphers: completata la sfida four-time-pad all'indirizzo https://secgroup.dais.unive.it/teaching/cryptography/shannon-theory-on-perfect-ciphers/
+
