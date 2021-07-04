@@ -1,12 +1,8 @@
 from AESAlgorithm import process_key, encrypt, decrypt, decrypt_eq
+from AESCrack import AESCrack
 
 if __name__ == '__main__':
-    # aes_alphabetic = AESAlphabetic("resources/cipher.txt")
-
-    # r = aes_alphabetic.AESmult(0b11010011, 0b00111010, True)
-    # r = aes_alphabetic.AESmult(0b0, 0b00111010, True)
-    # print(r, r, bin(r))
-
+    """
     plain_text = "00112233445566778899aabbccddeeff"
     plain_key = "000102030405060708090a0b0c0d0e0f"
 
@@ -20,9 +16,10 @@ if __name__ == '__main__':
 
     # decrypt(cipher, key, 4, 4, 10)
     decrypt_eq(cipher, key, 4, 4, 10)
+    """
 
-    # aes = AESAlgorithm(key, plain_text)
-    # aes.encrypt()
+    aes_crack = AESCrack("resources/cipher.txt")
+    aes_crack.crack()
 
 
 

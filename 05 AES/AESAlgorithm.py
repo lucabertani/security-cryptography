@@ -211,6 +211,8 @@ def decrypt(block, key, Nb=4, Nk=4, Nr=10):
 
 def decrypt_eq(block, key, Nb=4, Nk=4, Nr=10):
     w = KeyExpansionInv(key, Nb, Nk, Nr)
+    new_key = w[Nr * Nb:(Nr + 1) * Nb]
+    print_hex(f"New Key:", new_key)
 
     state = AddRoundKey(block, w[Nr * Nb:(Nr + 1) * Nb])
     print_hex("Start:", state)
@@ -237,7 +239,7 @@ def decrypt_eq(block, key, Nb=4, Nk=4, Nr=10):
     state = InvShiftRows(state)
     print_hex("InvShiftRows:", state)
 
-    new_key = w[:Nb]
+    new_key = w[0:Nb]
     print_hex("New Key:", new_key)
 
     state = AddRoundKey(state, new_key)
@@ -274,7 +276,7 @@ def KeyExpansionInv(key, Nb=4, Nk=4, Nr=10):
     w = KeyExpansion(key, Nb, Nk, Nr)
     dw = [word[:] for word in w]
 
-    for round in range(Nr):
+    for round in range(1, Nr, 1):
         t = InvMixColumns(dw[round * Nb:(round+1) * Nb])
         dw[round * Nb:(round + 1) * Nb] = t[:]
 
