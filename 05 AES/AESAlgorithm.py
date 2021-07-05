@@ -381,7 +381,16 @@ def print_hex(msg, state):
     s = ""
     for word in state:
         for byte in word:
-            s += hex(byte)[2:].zfill(2)
+            s += " " + hex(byte)[2:].zfill(2)
+    # s = "".join(hex(h)[2:].zfill(2) for h in hex_array)
+    # print(f"{msg}: {s}")
+    print(f"{msg}".ljust(ljust_length), s)
+
+def print_binary(msg, state):
+    s = ""
+    for word in state:
+        for byte in word:
+            s += " " + bin(byte)[2:].zfill(8)
     # s = "".join(hex(h)[2:].zfill(2) for h in hex_array)
     # print(f"{msg}: {s}")
     print(f"{msg}".ljust(ljust_length), s)
