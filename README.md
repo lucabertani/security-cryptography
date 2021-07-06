@@ -9,3 +9,5 @@ Corso di sicurezza sulla crittografia
 
 04 Perfect ciphers: completata la sfida four-time-pad all'indirizzo https://secgroup.dais.unive.it/teaching/cryptography/shannon-theory-on-perfect-ciphers/
 
+05 1 round AES: completata la sfida 1-round AES all'indirizzo https://secgroup.dais.unive.it/teaching/cryptography/advanced-encryption-standard/
+
