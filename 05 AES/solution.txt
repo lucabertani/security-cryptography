@@ -1,0 +1,4 @@
+Key: deadbeef12345678deadbeef12345678
+
+Dear Joan Daemen, I wanted to let you know that AES is great but can be simplified to 1 round
+without loosing any security. Best wishes, Blaise.

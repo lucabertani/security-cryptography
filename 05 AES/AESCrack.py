@@ -49,20 +49,47 @@ class AESCrack:
             [0x00, 0x00, 0x00, 0x00],
             [0x00, 0x00, 0x00, 0x00]
         ]"""
+        """k = [
+            [0, 1, 2, 3],
+            [4, 5, 6, 7],
+            [8, 9, 10, 11],
+            [12, 13, 14, 15]
+        ]"""
+        """
+        state = AddRoundKey(state, k)
+        state = InvMixColumns(state)
+        # state = InvMixColumns(state)
+        # state = AddRoundKey(state, InvMixColumns(k))
+        state = InvShiftRows(state)
+        state = InvSubBytes(state)
+        """
         k = [
             [space_hex, space_hex, space_hex, space_hex],
             [space_hex, space_hex, space_hex, space_hex],
-            [0x00, 0x00, 0x00, 0x00],
-            [0x00, 0x00, 0x00, 0x00]
+            [space_hex, space_hex, space_hex, space_hex],
+            [space_hex, space_hex, space_hex, space_hex]
         ]
+
+        """k = [
+            [0, 1, 2, 3],
+            [4, 5, 6, 7],
+            [8, 9, 10, 11],
+            [12, 13, 14, 15]
+        ]"""
         print_hex("k", k)
         res_k = state1
-        res_k = InvShiftRows(InvMixColumns(res_k))
-        print_hex("res_k", res_k)
-        res_k = AddRoundKey(res_k, k) # plain1 XOR k
-        print_hex("AddRoundKey", res_k)
+
+        # res_k = AddRoundKey(res_k, k)  # plain1 XOR k
+        # res_k = InvShiftRows(InvMixColumns(res_k))
+        # k = InvMixColumns(k)
+        # res_k = InvMixColumns(res_k)
+        # k = InvMixColumns(k)
+        res_k = AddRoundKey(res_k, k)
+        res_k = InvMixColumns(res_k)
+        res_k = InvShiftRows(res_k)
         res_k = InvSubBytes(res_k)
         print_hex("InvSubBytes", res_k)
+        print_ascii("ascii", res_k)
 
 
         # print_hex("res_hex12", res_hex12)
@@ -83,7 +110,6 @@ class AESCrack:
         print_binary("res_xor12_s", res_xor12_s)
         final_s = InvSubBytes(res_xor12_s)
         print_binary("final_s", final_s)
-
 
         dict = {}
         idx = 0
@@ -117,7 +143,68 @@ class AESCrack:
 
         print(dict_spaces)
 
+    def test_key(self):
+        key = "deadbeef12345678deadbeef12345678"
+        k = process_key(key)
 
+        r1 = self.test_decrypt(process_key(self.c1), k)
+        r2 = self.test_decrypt(process_key(self.c2), k)
+        r3 = self.test_decrypt(process_key(self.c3), k)
+        r4 = self.test_decrypt(process_key(self.c4), k)
+        r5 = self.test_decrypt(process_key(self.c5), k)
+        r6 = self.test_decrypt(process_key(self.c6), k)
+        r7 = self.test_decrypt(process_key(self.c7), k)
+        r8 = self.test_decrypt(process_key(self.c8), k)
+        r9 = self.test_decrypt(process_key(self.c9), k)
+
+        print_ascii("r1", r1)
+        print_ascii("r2", r2)
+        print_ascii("r3", r3)
+        print_ascii("r4", r4)
+        print_ascii("r5", r5)
+        print_ascii("r6", r6)
+        print_ascii("r7", r7)
+        print_ascii("r8", r8)
+        print_ascii("r9", r9)
+
+        # Dear Joan Daemen, I wanted to let you know that AES is great but can be simplified to 1 round
+        # without loosing any security. Best wishes, Blaise.
+
+    # essendo una mail, è molto probabile che il testo inizi con Dear Name Surname,
+    # nel nostro caso Dear Joan Daemen che fatalità misura 16 caratteri (la lunghezza della chiave AES)
+    # basta eseguire i passaggi dal plain_text fino al MixColumn e viceversa dal cipher al InvSubBytes
+    # per trovarsi con il valore plain XOR key = cipher
+    # eseguendo uno XOR con il plain si ottiene la chiave!
+    # con la chiave appena ottenuta, basta applicarla (vedi test_key) a tutti i blocchi (essendo ECB)
+    # e si ottiene il testo della mail
+    def test2(self):
+        plain1 = "Dear Joan Daemen"
+        cipher1 = self.c1
+        p1 = process_key(self.ascii_to_hex(plain1))
+        p1 = SubBytes(p1)
+        p1 = ShiftRows(p1)
+        p1 = MixColumns(p1)
+
+        c1 = process_key(cipher1)
+        c1 = InvShiftRows(c1)
+        c1 = InvSubBytes(c1)
+
+        res = [[None for j in range(4)] for i in range(4)]
+
+        for i, word in enumerate(res):
+            for j, byte in enumerate(word):
+                res[i][j] = p1[i][j] ^ c1[i][j]
+
+        print_hex("res", res)
+        print_ascii("res ascii", res)
+
+
+    # questo tentativo si basava sul fare c1 XOR c2 in modo da ottenere
+    # plain_text1 XOR plain_text2. A questo punto si cercava di individuare gli spazi anche se la funzione
+    # sbox mescola bene i caratteri e non è facile individuare con precisione il punto in cui è presente uno spazio
+    # l'idea era di fare XOR di tutti i blocchi in modo da avere una statistica più precisa della posizione
+    # degli spazi ed iniziare e decriptare parte del testo e della chiave fino a ricomporli
+    # però richiede parecchio tempo
     def test(self):
         # t1 = "HELLO NEW WORLD!"
         # t2 = "YOU'RE WELCOMEEE"

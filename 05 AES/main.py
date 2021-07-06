@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
     aes_crack = AESCrack("resources/cipher.txt")
     # aes_crack.crack()
-    aes_crack.test()
+    aes_crack.test2()
+    aes_crack.test_key()
 
 
 
