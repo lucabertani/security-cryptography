@@ -395,6 +395,15 @@ def print_binary(msg, state):
     # print(f"{msg}: {s}")
     print(f"{msg}".ljust(ljust_length), s)
 
+def print_ascii(msg, state):
+    s = ""
+    for word in state:
+        for byte in word:
+            s += " " + chr(byte)
+    # s = "".join(hex(h)[2:].zfill(2) for h in hex_array)
+    # print(f"{msg}: {s}")
+    print(f"{msg}".ljust(ljust_length), s)
+
 """
 while (i < Nb * (Nr+1)]
     temp = w[i-1]

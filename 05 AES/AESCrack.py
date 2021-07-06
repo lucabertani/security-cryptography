@@ -1,5 +1,5 @@
 from AESAlgorithm import process_key, SubBytes, ShiftRows, print_hex, InvShiftRows, InvSubBytes, MixColumns,\
-    InvMixColumns, AddRoundKey, KeyExpansionInv, sbox, isbox, print_binary
+    InvMixColumns, AddRoundKey, KeyExpansionInv, sbox, isbox, print_binary, print_ascii
 from Color import Color
 
 
@@ -29,10 +29,44 @@ class AESCrack:
         # print("")
 
     def find_spaces(self, c1, c2):
+        space = " "
+        space_hex = int(space.encode().hex(), 16)
+        space_hex_s = sbox[space_hex]
+
         state1 = InvSubBytes(InvShiftRows(c1))
         state2 = InvSubBytes(InvShiftRows(c2))
-        res_hex12 = AddRoundKey(state1, state2)
-        res_hex12 = InvShiftRows(InvMixColumns(res_hex12))
+        # k_mix = SubBytes(ShiftRows(k))
+        state1_m = InvShiftRows(InvMixColumns(state1))
+        state2_m = InvShiftRows(InvMixColumns(state2))
+        res_hex12 = AddRoundKey(state1_m, state2_m)  # rimuovo k!
+        # res_hex12 = AddRoundKey(state1, state2) # rimuovo k!
+        # res_hex12 = InvShiftRows(InvMixColumns(res_hex12)) # rimetto nell'ordine corretto, quindi ottengo sbox[plain1] XOR sbox[plain2]
+
+
+        """k = [
+            [0x00, space_hex_s, 0x00, 0x00],
+            [0x00, 0x00, 0x00, 0x00],
+            [0x00, 0x00, 0x00, 0x00],
+            [0x00, 0x00, 0x00, 0x00]
+        ]"""
+        k = [
+            [space_hex, space_hex, space_hex, space_hex],
+            [space_hex, space_hex, space_hex, space_hex],
+            [0x00, 0x00, 0x00, 0x00],
+            [0x00, 0x00, 0x00, 0x00]
+        ]
+        print_hex("k", k)
+        res_k = state1
+        res_k = InvShiftRows(InvMixColumns(res_k))
+        print_hex("res_k", res_k)
+        res_k = AddRoundKey(res_k, k) # plain1 XOR k
+        print_hex("AddRoundKey", res_k)
+        res_k = InvSubBytes(res_k)
+        print_hex("InvSubBytes", res_k)
+
+
+        # print_hex("res_hex12", res_hex12)
+        print_binary("res_hex12", res_hex12)
 
         space = " "
         space_hex = int(space.encode().hex(), 16)
@@ -46,7 +80,11 @@ class AESCrack:
             for j, byte in enumerate(word):
                 res_xor12_s[i][j] = byte ^ space_hex_s
 
+        print_binary("res_xor12_s", res_xor12_s)
         final_s = InvSubBytes(res_xor12_s)
+        print_binary("final_s", final_s)
+
+
         dict = {}
         idx = 0
         for word in final_s:
@@ -86,8 +124,10 @@ class AESCrack:
         # t2 = "HELLOONEW WORLD!"
         # t1 = "A AAAAAAAAAAAAAA"
         # t2 = "AR RRRRRRRRRRRRR"
-        t1 = "AAAAAAAAAAAAAAAC"
-        t2 = "ABCDEFGHILMNOPQ "
+        # t1 = "AAAAAAAAAAAAAAAC"
+        # t2 = "ABCDEFGHILMNOPQ "
+        t1 = "ABCDEFGHIJKLMNOP"
+        t2 = "W               "
         # plain_key = "000102030405060708090a0b0c0d0e0f"
         plain_key = "000102030405060708090a0b0c0d0e0f"
         h1 = self.ascii_to_hex(t1)
@@ -103,8 +143,9 @@ class AESCrack:
         # print_hex("h1", h1)
         print("decrypt", self.state_to_ascii(self.test_decrypt(c1, k)))
 
-        # self.find_spaces(c1, c2)
-        self.find_all_spaces()
+        a = self.find_spaces(c1, c2)
+        print(a)
+        # self.find_all_spaces()
 
         """
         
